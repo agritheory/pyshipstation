@@ -445,6 +445,21 @@ class ShipStation(ShipStationBase):
 
         return r
 
+    def delete(self, endpoint="", data=None):
+        url = "{}{}".format(self.url, endpoint)
+        headers = {"content-type": "application/json"}
+        r = requests.put(
+            url,
+            auth=(self.key, self.secret),
+            data=data,
+            headers=headers,
+            timeout=self.timeout
+        )
+        if self.debug:
+            pprint.PrettyPrinter(indent=4).pprint(r.json())
+
+        return r
+
     def fetch_orders(self, parameters={}):
         """
             Query, fetch, and return existing orders from ShipStation
