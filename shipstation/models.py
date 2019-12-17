@@ -49,11 +49,11 @@ class ShipStationBase(object):
 
     def require_membership(self, value, other):
         if value not in other:
-            raise AttributeError("'{}' is not a valid option for".format(value))
+            raise AttributeError("'{}' is not one of {}".format(value, str(other)))
 
     def _validate_parameters(self, parameters, valid_parameters):
         self.require_type(parameters, dict)
-        self.require_membership(parameters, valid_parameters)
+        # self.require_membership(parameters, valid_parameters)
         return {self.to_camel_case(key): value for key, value in parameters.items()}
 
 
@@ -138,7 +138,8 @@ class ShipStationContainer(ShipStationBase):
         self.weight = weight
 
     def set_units(self, units):
-        self.require_membership(units)
+        # WEIGHT_UNIT_OPTIONS
+        self.require_membership(units, WEIGHT_UNIT_OPTIONS)
         self.units = units
 
     def as_dict(self):
@@ -371,14 +372,14 @@ class ShipStationAdvancedOptions(ShipStationBase):
         custom_field_1=None,
         custom_field_2=None,
         custom_field_3=None,
-        soure=None,
+        source=None,
         merged_or_split=None,
         merged_ids=None,
         bill_to_party=None,
         bill_to_account=None,
         bill_to_postal_code=None,
         bill_to_country_code=None,
-        bill_to_my_other_account=None,
+        bill_to_my_other_account=None
     ):
         self.warehouse_id = warehouse_id
         self.non_machineable = non_machineable
