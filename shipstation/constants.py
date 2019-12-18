@@ -14,6 +14,7 @@ __all__ = [
     "SUBSCRIBE_TO_WEBHOOK_OPTIONS",
     "SUBSCRIBE_TO_WEBHOOK_EVENT_OPTIONS",
     "WEIGHT_UNIT_OPTIONS",
+    "CREATE_WAREHOUSE_OPTIONS",
 ]
 
 # https://www.shipstation.com/developer-api/#/reference/orders/createupdate-order/create/update-order
@@ -194,3 +195,5 @@ SUBSCRIBE_TO_WEBHOOK_EVENT_OPTIONS = (
 WEIGHT_UNIT_OPTIONS = ("pounds", "ounces", "grams")
 
 DIMENSIONS_UNIT_OPTIONS = ("inches", "centimeters")
+
+CREATE_WAREHOUSE_OPTIONS = ('warehouse_name', 'origin_address', 'return_address', 'is_default')

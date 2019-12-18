@@ -4,8 +4,7 @@ from shipstation.api import ShipStation
 
 
 secret_key, secret_secret = "8077d452600c4a64badc3b1aa6a0653f", "db0f8a3f0cc2481a9e9b12886b2cd395"
-ss = ShipStation(secret_key, secret_secret)  #, debug=True)
-carrier_code = ""
+ss = ShipStation(secret_key, secret_secret, debug=True, timeout=5)
 
 
 def test_webooks():
@@ -52,9 +51,71 @@ def test_warehouses():
     warehouses_id = warehouses.json()[0].get('warehouseId')
     warehouse = ss.get_warehouse(warehouse_id)
     assert warehouse.status_code == 200
-    # ss.create_warehouse()
-    # ss.update_warehouse()
+    new_warehouse = {
+        "warehouse_name": "New Ship From Location",
+        "origin_address": get_warehouse_address(),
+        "return_address": get_warehouse_address(),
+        "is_default": 'false'
+    }
+    r = ss.create_warehouse(new_warehouse)
+    assert warehouse.status_code == 200
+    new_warehouse_id = r.json().get('warehouseId')
+
+
+    # new_warehouse = ss.get_warehouse(new_warehouse_id).json()
+    new_warehouse = ss.get_warehouse('2126606').json()
+    new_warehouse.warehouse_name = "Updated New Ship From Location"
+    ss.update_warehouse(new_warehouse)
     # ss.delete_warehouse()
+
+    {
+      "warehouseId": 12345,
+      "warehouseName": "API Ship From Location",
+      "originAddress": {
+        "name": "API Warehouse",
+        "company": "ShipStation",
+        "street1": "2815 Exposition Blvd",
+        "street2": null,
+        "street3": null,
+        "city": "Austin",
+        "state": "TX",
+        "postalCode": "78703",
+        "country": "US",
+        "phone": "512-555-5555",
+        "residential": true,
+        "addressVerified": null
+      },
+      "returnAddress": {
+        "name": "API Ship From Location",
+        "company": "ShipStation",
+        "street1": "2815 Exposition Blvd",
+        "street2": null,
+        "street3": null,
+        "city": "Austin",
+        "state": "TX",
+        "postalCode": "78703",
+        "country": "US",
+        "phone": "512-555-5555",
+        "residential": null,
+        "addressVerified": null
+      },
+      "createDate": "2015-07-02T08:38:31.4870000",
+      "isDefault": true
+    }
+
+
+def get_warehouse_address():
+    return ShipStationAddress(
+        name="NM Warehouse",
+        company="White Sands Co.",
+        street1="4704 Arabela Dr.",
+        city="Las Cruces",
+        state="NM",
+        postal_code="80012",
+        country="US",
+        phone="512-111-2222",
+        residential='true'
+    )
 
 
 def test_users():
@@ -77,10 +138,17 @@ def test_carriers():
 def test_customers():
     r = ss.list_customers()
     assert r.status_code == 200
+    customer_id = r.json()['customers'][0].get('customerId')
+    r = ss.get_customer(customer_id)
+    assert r.status_code == 200
 
 
 def test_shipments_and_fulfillments():
     r = ss.get_rates(carrier_code)
+    assert r.status_code == 200
+    r = ss.list_fulfillments()
+    assert r.status_code == 200
+    r = ss.list_shipments()
     assert r.status_code == 200
 
 
